@@ -1,18 +1,20 @@
 {
   "name": "@cotex/cli",
   "version": "1.0.0",
-  "description": "CLI for remote Tex/Latex compilation",
-  "main": "index.js",
+  "description": "CLI for remote CoTex -- remote Tex/Latex compilation and editing.",
   "scripts": {
+    "postinstall": "node welcome.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "bin": "./bin/cotex-cli",
+  "bin": {
+    "cotex": "./bin/cotex-cli"
+  },
   "preferGlobal": true,
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/sushovan4/cotex-cli.git"
+    "url": "git+ssh://git@github.com/co-tex/cotex-cli.git"
   },
-  "author": "",
+  "author": "Sushovan Majhi",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/sushovan4/cotex-cli/issues"
