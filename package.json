@@ -1,11 +1,13 @@
 {
-  "name": "cotex-cli",
+  "name": "cotex",
   "version": "1.0.0",
-  "description": "",
+  "description": "CLI for remote Tex/Latex compilation",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "bin": "./bin/cotex-cli",
+  "preferGlobal": true,
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/sushovan4/cotex-cli.git"
@@ -15,5 +17,17 @@
   "bugs": {
     "url": "https://github.com/sushovan4/cotex-cli/issues"
   },
-  "homepage": "https://github.com/sushovan4/cotex-cli#readme"
+  "homepage": "https://github.com/sushovan4/cotex-cli#readme",
+  "dependencies": {
+    "chalk": "^4.1.0",
+    "figlet": "^1.5.0",
+    "inquirer": "^7.3.3",
+    "nopt": "^5.0.0",
+    "npmlog": "^4.1.2",
+    "opener": "^1.5.2"
+  },
+  "devDependencies": {
+    "marked": "^1.2.7",
+    "marked-man": "^0.7.0"
+  }
 }

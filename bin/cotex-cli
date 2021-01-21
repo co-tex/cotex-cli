@@ -1,0 +1,28 @@
+#!/usr/bin/env node
+
+const cotex = require('../lib/cotex.js');
+const nopt = require('nopt');
+const log = require('npmlog');
+
+const parsed = nopt({}, {}, process.argv, 2);
+const cmd = parsed.argv.remain.shift();
+
+cotex.load().then(() => {
+
+    cotex.cli[cmd]
+        .apply(null, parsed.argv.remain)
+        .catch(errorHandler);
+}).catch(errorHandler);
+
+function errorHandler (err) {
+    if (!err) {
+        process.exit(1);
+    }
+ 
+    if (err.type === 'EUSAGE') {
+        err.message && log.error(err.message);
+        process.exit(1);
+    }
+    log.error(err);
+    process.exit(1);
+}
