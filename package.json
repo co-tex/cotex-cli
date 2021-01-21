@@ -1,5 +1,5 @@
 {
-  "name": "cotex",
+  "name": "@cotex/cli",
   "version": "1.0.0",
   "description": "CLI for remote Tex/Latex compilation",
   "main": "index.js",
