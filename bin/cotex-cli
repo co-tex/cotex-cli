@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 
+const nopt = require('nopt');
+const osenv = require('osenv');
+const fs = require('fs');
+
 const cotex = require('../lib/cotex.js');
 const pkg = require('../package.json');
 const log = require('npmlog');
-const nopt = require('nopt');
 const help = require('../lib/help.js');
-const osenv = require('osenv');
-const fs = require('fs');
 
 const parsed = nopt({
     'json': [Boolean]
@@ -18,7 +19,6 @@ parsed.cotexconf = home + '/' + '.cotexrc';
 if (!fs.existsSync(parsed.cotexconf)) {
   fs.writeFileSync(parsed.cotexconf, '');
 }
-
 
 const cmd = parsed.argv.remain.shift();
 
@@ -53,6 +53,5 @@ function errorHandler (err) {
         log.error('', 'cotex:', pkg.version, 'node:', process.version);
         log.error('', 'please open an issue including this log on ' + pkg.bugs.url);
     }
-  
     process.exit(1);
 }
