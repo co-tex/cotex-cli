@@ -21,9 +21,13 @@
   },
   "homepage": "https://github.com/sushovan4/cotex-cli#readme",
   "dependencies": {
+    "axios": "^0.21.1",
+    "browser-sync": "^2.26.13",
     "chalk": "^4.1.0",
     "chokidar": "^3.5.1",
+    "config-chain": "^1.1.12",
     "directory-tree": "^2.2.5",
+    "express": "^4.17.1",
     "figlet": "^1.5.0",
     "inquirer": "^7.3.3",
     "nopt": "^5.0.0",
