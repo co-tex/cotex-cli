@@ -4,7 +4,6 @@ import { cotex } from './cotex';
 import * as help from './help';
 import * as osenv from 'osenv';
 import * as fs from 'fs';
-import { green } from 'chalk';
 //import pkg = require('../package.json');
 
 const parsed = nopt({
@@ -25,8 +24,8 @@ cotex.load(parsed).then(() => {
     }
     
     cotex.cli[cmd]
-        .apply(null, parsed.argv.remain)
-        .catch(errorHandler);
+    .apply(null, parsed.argv.remain)
+    .catch(errorHandler);
 }).catch(errorHandler);
 
 function errorHandler(err: Error) {

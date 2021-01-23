@@ -31,7 +31,9 @@ function getGeneralHelpMessage() {
     You can get more help on each command with: cotex help <command>
     
     Example:
-    cotex help init`;
+    cotex help init
+    
+  `;
 
   return message;
 }
