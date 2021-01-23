@@ -4,7 +4,8 @@
   "description": "CLI for remote CoTex -- remote Tex/Latex compilation and editing.",
   "scripts": {
     "postinstall": "node welcome.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
   },
   "bin": {
     "cotex": "./bin/cotex-cli"
@@ -37,6 +38,7 @@
   },
   "devDependencies": {
     "marked": "^1.2.7",
-    "marked-man": "^0.7.0"
+    "marked-man": "^0.7.0",
+    "typescript": "^4.1.3"
   }
 }

@@ -1,7 +1,7 @@
 'use strict';
 
 const fs = require('fs');
-const pkg = require('../package.json');
+const pkg = require('../../package.json');
 const config = require('./config.js');
 
 const cotex = { loaded: false };
