@@ -2,24 +2,20 @@ import * as nopt from 'nopt';
 import * as log from 'npmlog';
 import { cotex } from './cotex';
 import * as help from './help';
-
-import { green } from 'chalk';
 import * as osenv from 'osenv';
 import * as fs from 'fs';
+import { green } from 'chalk';
 //import pkg = require('../package.json');
 
 const parsed = nopt({
     'json': [Boolean]
 }, {'j': '--json'}, process.argv, 2);
 
-/* const home = osenv.home();
+const home = osenv.home();
 parsed.cotexconf = home + '/' + '.cotexrc';
- */
-/* if (!fs.existsSync(parsed.cotexconf)) {
-    console.log(green('CREATE' + ' config file'));
+if (!fs.existsSync(parsed.cotexconf)) {
     fs.writeFileSync(parsed.cotexconf, '');
 }
-*/
 
 const cmd: string = parsed.argv.remain.shift() || "";
 cotex.load(parsed).then(() => {
