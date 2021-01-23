@@ -3,9 +3,11 @@
   "version": "1.0.1",
   "description": "CLI for remote CoTex -- remote Tex/Latex compilation and editing.",
   "scripts": {
-    "postinstall": "node welcome.js",
+    "postinstall": "node ./lib/welcome.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc"
+    "build": "tsc",
+    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
+    "lint": "tslint -p tsconfig.json"
   },
   "bin": {
     "cotex": "./bin/cotex-cli"
@@ -37,8 +39,16 @@
     "osenv": "^0.1.5"
   },
   "devDependencies": {
+    "@types/figlet": "^1.2.1",
+    "@types/node": "^14.14.22",
+    "@types/nopt": "^3.0.29",
+    "@types/npmlog": "^4.1.2",
+    "@types/osenv": "^0.1.0",
     "marked": "^1.2.7",
     "marked-man": "^0.7.0",
+    "prettier": "^2.2.1",
+    "tslint": "^6.1.3",
+    "tslint-config-prettier": "^1.18.0",
     "typescript": "^4.1.3"
   }
 }

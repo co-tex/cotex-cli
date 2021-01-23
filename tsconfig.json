@@ -1,11 +1,16 @@
 {
     "compilerOptions": {
-      "target": "es5",
+      "target": "es2017",
       "module": "commonjs",
+      "removeComments": true,
       "declaration": true,
-      "outDir": "lib",
-      "strict": true
+      "outDir": "./lib",
+      "strict": true,
+      "typeRoots": [
+        "./node_modules/@types"
+      ],
+      "resolveJsonModule": false
     },
-    "include": ["src", "index.ts"],
+    "include": ["src"],
     "exclude": ["node_modules", "**/__tests__/*"]
 }
