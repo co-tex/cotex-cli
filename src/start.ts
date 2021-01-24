@@ -1,4 +1,3 @@
-'use strict';
 const cotex = require('./cotex.js');
 const chokidar = require('chokidar');
 const express = require('express');
@@ -20,13 +19,13 @@ function start() {
         persistent: true,
         ignoreInitial: true,
       })
-      .on('all', (event, path) => {
+      .on('all', (event: any, path: any) => {
         cotex.commands['create-index']();
         axios({
           url: 'http://localhost:5000/compile',
           responseType: 'stream',
           method: 'GET',
-        }).then(function (res) {
+        }).then(function (res: any) {
           res.data.pipe(fs.createWriteStream('output.pdf'));
         });
       });
@@ -35,11 +34,11 @@ function start() {
     const app = express();
     const port = 4000;
 
-    app.get('/', (req, res) => {
+    app.get('/', (req: any, res: any) => {
       res.sendFile(path.resolve(__dirname + '/../') + '/www/preview.html');
     });
 
-    app.get('/output', (req, res) => {
+    app.get('/output', (req: any, res: any) => {
       res.sendFile('/output.pdf', { root: process.cwd() });
     });
 
@@ -55,4 +54,4 @@ function start() {
     });
   });
 }
-exports.cli = start;
+export { start as cli };
