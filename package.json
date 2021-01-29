@@ -35,6 +35,7 @@
     "express": "^4.17.1",
     "figlet": "^1.5.0",
     "inquirer": "^7.3.3",
+    "json-diff": "^0.5.4",
     "jwt-decode": "^3.1.2",
     "nopt": "^5.0.0",
     "npmlog": "^4.1.2",
@@ -42,10 +43,12 @@
     "osenv": "^0.1.5"
   },
   "devDependencies": {
+    "@types/axios": "^0.14.0",
     "@types/clui": "^0.3.0",
     "@types/configstore": "^4.0.0",
     "@types/figlet": "^1.2.1",
     "@types/inquirer": "^7.3.1",
+    "@types/json-diff": "^0.5.1",
     "@types/node": "^14.14.22",
     "@types/nopt": "^3.0.29",
     "@types/npmlog": "^4.1.2",
