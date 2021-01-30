@@ -1,63 +1,58 @@
 import axios from 'axios';
 import * as fs from 'fs';
-import * as dt from 'directory-tree';
 import * as diff from 'json-diff';
 import * as FormData from 'form-data';
+import { findRoot, isProject, index, changeSet } from './util';
+import { exit } from 'process';
+import { grey, red } from 'chalk';
+import Configstore = require('configstore');
 
 async function sync() {
-  const remoteIdx = (await axios.get('http://localhost:3000/projects/1/index')).data;
-  const localIdx: any = {};
-  dt('./', { exclude: /.cotex|.git|node_modules/, attributes: ['mtime'] }, (file,path,stats) => {
-    localIdx[file.path] = file;
-  });
-  const diffFiles =  diff.diff(remoteIdx,localIdx);
-  for(let fname in diffFiles) {
-
-    // upload
-    if(fname.split('__').pop() === 'added') {
-      const form = new FormData();
-      
-      const fileStream = fs.createReadStream('./' + diffFiles[fname].path)
-      const idx = diffFiles[fname].path.lastIndexOf(diffFiles[fname].name);
-      let path = '';
-
-      if(idx > 0 ) {
-        path = diffFiles[fname].path.slice(0,idx - 1);
-      }
-      form.append('path', path);
-      form.append('file', fileStream);
-      
-      axios.post('http://localhost:3000/projects/1/sync', form,{
-        headers: form.getHeaders()
-      });
-    }
-    // upload
-    else if(diffFiles[fname].mtime.__old ){
-      const oldDate = Date.parse(diffFiles[fname].mtime.__old);
-      const newDate = Date.parse(diffFiles[fname].mtime.__new);
-
-      if(oldDate < newDate ) {
-        
-      const form = new FormData();
-
-      const fileStream = fs.createReadStream('./' + fname)
-      const idx = fname.lastIndexOf(localIdx[fname].name);
-      let path = '';
-
-      if(idx > 0 ) {
-        path = fname.slice(0,idx - 1);
-      }
-      form.append('path', path);
-      form.append('file', fileStream);
-      
-      axios.post('http://localhost:3000/projects/1/sync', form,{
-        headers: form.getHeaders()
-      });
-
-      }
-    
-    }
+  const currentPath = process.cwd();
+  if(!isProject(currentPath)) {
+    console.log(red('Not a CoTex project.'))
+    console.log('Run: ' + grey('cotex init'));
+    exit();
   }
+
+  const rootPath = findRoot(currentPath);
+  const cs = new Configstore('cotex-cli',{}, { configPath: rootPath + '/.cotex/config.json'});
+  let localIdx: any;
+  let remoteIdx: any;
+
+  return index(rootPath).then((index) => {
+    localIdx = index;
+    return axios.get(cs.get('url') + '/projects/1/index');
+  }).then((response)=> {
+    remoteIdx = response.data;
+    const df =  diff.diff(remoteIdx,localIdx);
+    const changes = changeSet(df);
+    console.log(changes);
+    
+    changes.added.forEach(async (element: any) => {
+      const form = new FormData();
+      const fileStream = fs.createReadStream(rootPath + '/' + element.path);
+      form.append('dir', element.dir);
+      form.append('file', fileStream);
+      await axios.post(cs.get('url') + '/projects/1/upload', form, {
+        headers: form.getHeaders()
+      });
+    });
+    
+    changes.modified.forEach(async (element: any) => {
+      const form = new FormData();
+      const fileStream = fs.createReadStream(rootPath + '/' + element.path);
+      form.append('dir', element.dir);
+      form.append('file', fileStream);
+      await axios.post(cs.get('url') + '/projects/1/upload', form, {
+        headers: form.getHeaders()
+      });
+    });
+
+    changes.deleted.forEach(async (element: any) => {
+      axios.post(cs.get('url') + '/projects/1/delete', changes.deleted);
+    });
+  });
 }
 exports.api = sync;
 exports.cli = sync;
