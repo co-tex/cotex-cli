@@ -1,11 +1,9 @@
 import * as fs from 'fs';
-//import * as pkg from '../package.json';
-//import { config } from './config';
 
-export const cotex: any = {
+const cotex: any = {
   loaded: false,
   cli: {},
-  api: {},
+  commands: {},
   load: function (opts: any): Promise<void> {
     return new Promise((resolve, reject) => {
       //config.loadConfig(opts).then((cfg) => {
@@ -23,7 +21,7 @@ export const cotex: any = {
             this.cli[cmd] = mod.cli;
           }
           if (mod.api) {
-            this.api[cmd] = mod.api;
+            this.commands[cmd] = mod.api;
           }
         });
         this.loaded = true;        
@@ -33,22 +31,4 @@ export const cotex: any = {
   },
   //});
 };
-
-/* Object.defineProperty(cotex, 'commands', {
-  get: () => {
-    if (cotex.loaded === false) {
-      throw new Error('run cotex.load before');
-    }
-    return api;
-  },
-});
-
-Object.defineProperty(cotex, 'cli', {
-  get: () => {
-    if (cotex.loaded === false) {
-      throw new Error('run cotex.load before');
-    }
-    return cli;
-  },
-});
-*/
+export { cotex }

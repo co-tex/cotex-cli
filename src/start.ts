@@ -1,17 +1,16 @@
-const cotex = require('./cotex.js');
-const chokidar = require('chokidar');
-const express = require('express');
+import { cotex }  from './cotex';
+import chokidar = require('chokidar');
+import express = require('express');
 const bs = require('browser-sync').create();
-const path = require('path');
-const { default: axios } = require('axios');
-const fs = require('fs');
+import path = require('path');
+import { default as axios } from 'axios';
+import fs = require('fs');
 
-function start() {
-  return new Promise((resolve, reject) => {
-    console.log('Starting CoTex remote compilation...');
-    console.log('Testing the remote URL at ' + 'http://localhost:3000\n\n');
-
-    cotex.commands['create-index']();
+async function start() {
+  console.log('Starting CoTex remote compilation...');
+  console.log('Testing the remote URL at ' + 'http://localhost:3000\n\n');
+ 
+    await cotex.commands.sync();
 
     chokidar
       .watch('.', {
@@ -19,10 +18,10 @@ function start() {
         persistent: true,
         ignoreInitial: true,
       })
-      .on('all', (event: any, path: any) => {
-        cotex.commands['create-index']();
+      .on('all', async (event: any, path: any) => {
+        await cotex.commands.sync();
         axios({
-          url: 'http://localhost:5000/compile',
+          url: 'http://localhost:3000/projects/1/compile',
           responseType: 'stream',
           method: 'GET',
         }).then(function (res: any) {
@@ -52,6 +51,5 @@ function start() {
       console.log(`Live Preview at http://localhost:3000\n`);
       console.log(`Download the output at http://localhost:3000/output\n`);
     });
-  });
 }
 export { start as cli };
