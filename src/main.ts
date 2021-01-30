@@ -4,7 +4,6 @@ import { cotex } from './cotex';
 import * as help from './help';
 import * as osenv from 'osenv';
 import * as fs from 'fs';
-//import pkg = require('../package.json');
 
 const parsed = nopt({
     'json': [Boolean]
@@ -44,8 +43,6 @@ function errorHandler(err: Error) {
         log.error('', err.stack);
         log.error('', '');
         log.error('', '');
-        //log.error('', 'cotex:', pkg.version, 'node:', process.version);
-        //log.error('', 'please open an issue including this log on ' + pkg.bugs.url);
     }
     process.exit(1);
 }
