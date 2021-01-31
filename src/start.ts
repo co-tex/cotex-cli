@@ -20,7 +20,7 @@ async function start() {
       })
       .on('all', async (event: any, path: any) => {
         await cotex.commands.sync();
-        axios({
+        return axios({
           url: 'http://localhost:3000/projects/1/compile',
           responseType: 'stream',
           method: 'GET',

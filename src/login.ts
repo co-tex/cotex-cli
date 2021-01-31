@@ -60,7 +60,7 @@ async function login(): Promise<void> {
         console.log('Run: ' + grey('cotex init'));
         exit();
     }
-
+    
     return inquirer.prompt(questions)
     .then((answers) => {
         status.start();

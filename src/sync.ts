@@ -27,7 +27,6 @@ async function sync() {
     remoteIdx = response.data;
     const df =  diff.diff(remoteIdx,localIdx);
     const changes = changeSet(df);
-    console.log(changes);
     
     changes.added.forEach(async (element: any) => {
       const form = new FormData();
