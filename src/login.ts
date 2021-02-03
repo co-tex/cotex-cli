@@ -7,45 +7,19 @@ import { findRoot, isProject } from './util';
 import { exit } from 'process';
 import { red, grey, green } from 'chalk';
 
-const questions = [
-    {
-        name: 'email',
-        type: 'input',
-        message: 'Enter your CoTex e-mail address:',
-        validate: function(value: string) {
-            if (value.length) {
-                return true;
-            } else {
-                return 'Please enter your e-mail address.';
-            }
-        }
-    },
-    {
-        name: 'password',
-        type: 'password',
-        message: 'Enter your password:',
-        validate: function(value: string) {
-            if (value.length) {
-                return true;
-            } else {
-                return 'Please enter your password.';
-            }
-        },
-    }
-]
-
 async function login(): Promise<void> {
+    
     const currentPath = process.cwd();
     
     if(!isProject(currentPath)) {
-        console.log(red('Not a CoTex project!\n'));
-        console.log(`Run ${grey('cotex init')} first`);
+        console.log(red('Not a CoTex project!'));
+        console.log(`To initialize run: ${grey('cotex init')}`);
         exit();
     }
     
     const rootPath = findRoot(currentPath);
     const cs = new ConfigStore('cotex-cli',{},{ configPath: rootPath + '/.cotex/config.json' } );
-
+    
     const token = cs.get('access_token');
     /* if(token) {
         const decoded = jwtDecode<JwtPayload>(token);
@@ -55,13 +29,40 @@ async function login(): Promise<void> {
     
     const url = cs.get('url');
     const status = new CLI.Spinner('Authenticating you. Please wait...');
+    
     if(!url) {
         console.log(red('Project not properly initialized!'));
         console.log('Run: ' + grey('cotex init'));
         exit();
     }
     
-    return inquirer.prompt(questions)
+    return inquirer.prompt([
+        {
+            name: 'email',
+            type: 'input',
+            message: 'Email address for (' +  grey(url) + '):',
+            validate: function(value: string) {
+                if (value.length) {
+                    return true;
+                } else {
+                    return 'Please enter your e-mail address.';
+                }
+            }
+        },
+        {
+            name: 'password',
+            type: 'password',
+            mask: true,
+            message: 'Enter your password:',
+            validate: function(value: string) {
+                if (value.length) {
+                    return true;
+                } else {
+                    return 'Please enter your password.';
+                }
+            },
+        }
+    ])
     .then((answers) => {
         status.start();
         return axios.post(url + '/auth/login', answers);

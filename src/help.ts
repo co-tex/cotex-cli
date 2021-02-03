@@ -1,6 +1,6 @@
 import {cotex } from './cotex';
 import * as path from 'path';
-import { green, red } from 'chalk';
+import { green, red, gray } from 'chalk';
 
 const isWindows = require('os').platform() === 'win32';
 const spawnSync = require('child_process').spawnSync;
@@ -22,18 +22,19 @@ export { help as cli };
 function getGeneralHelpMessage() {
   const commands = Object.keys(cotex.cli).join(', ');
 
-  const message = `${red('usage')}: cotex <${green('command')}> [args]
+  const message = `
+${red('Usage')}: cotex <${green('command')}> [args]
     
-    The available commands for cotex are:
+The available commands are:
     
-    ${commands}
+  ${commands}
     
-    You can get more help on each command with: cotex help <command>
+You can get more help on each command with: cotex help <command>
     
-    Example:
-    cotex help init
-    
-  `;
+Example: cotex help init
+
+To initialize a CoTex project: ${gray('cotex init')}
+`;
 
   return message;
 }

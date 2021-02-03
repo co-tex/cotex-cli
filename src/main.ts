@@ -2,20 +2,10 @@ import * as nopt from 'nopt';
 import * as log from 'npmlog';
 import { cotex } from './cotex';
 import * as help from './help';
-import * as osenv from 'osenv';
-import * as fs from 'fs';
 
-const parsed = nopt({
-    'json': [Boolean]
-}, {'j': '--json'}, process.argv, 2);
-
-const home = osenv.home();
-parsed.cotexconf = home + '/' + '.cotexrc';
-if (!fs.existsSync(parsed.cotexconf)) {
-    fs.writeFileSync(parsed.cotexconf, '');
-}
-
+const parsed = nopt({},{}, process.argv, 2);
 const cmd: string = parsed.argv.remain.shift() || "";
+
 cotex.load(parsed).then(() => {
    
     if (!cotex.cli[cmd]) {

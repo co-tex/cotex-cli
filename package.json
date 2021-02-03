@@ -1,13 +1,16 @@
 {
   "name": "@cotex/cli",
-  "version": "1.0.1",
-  "description": "CLI for remote CoTex -- remote Tex/Latex compilation and editing.",
+  "version": "1.0.2",
+  "description": "CoTex CLI",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json"
   },
+  "prepublish": "tsc",
+  "main": "lib/main.js",
+  "types": "lib/main.d.ts",
   "bin": {
     "cotex": "./bin/cotex-cli"
   },
@@ -16,7 +19,7 @@
     "type": "git",
     "url": "git+ssh://git@github.com/co-tex/cotex-cli.git"
   },
-  "author": "Sushovan Majhi",
+  "author": "Sushovan Majhi <sush@smajhi.com>",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/sushovan4/cotex-cli/issues"

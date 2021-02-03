@@ -1,4 +1,4 @@
-import { red, green, grey, yellow } from 'chalk';
+import { red, green, grey, yellow, gray } from 'chalk';
 import { textSync } from 'figlet';
 import * as fs from 'fs';
 import * as inquirer from 'inquirer';
@@ -15,10 +15,11 @@ const questions: any = [
     message: 'Enter the the URL of the remote server:',
     default: 'https://compile.cotex.org',
     validate: function (value: string) {
-      if (value.length) {
+      const regexp = new RegExp(/^https?:\/\/\w+(\.\w+)*(:[0-9]+)?(\/.*)?$/);    
+      if (regexp.test(value)) {
         return true;
       } else {
-        return 'Please enter the URL.';
+        return 'Please enter a valid URL with http:// or https:// prefix.';
       }
     },
   },
@@ -35,16 +36,18 @@ const questions: any = [
       }
     },
   },
+  {
+      name: 'autoCompile',
+      type: 'confirm',
+      message: 'Enable auto compile on save?',
+  }
 ];
 
 async function init(args?: any) { 
   console.log(
       red(textSync('CoTex CLI', { horizontalLayout: 'full' })) +
-        '\n' +
-        '                              ' +
-        green('Tex/Latex with anyone, anywhere!\n') +
-        '                      ' +
-        green('Author: Sushovan Majhi <sush@smajhi.com>\n\n'),
+        '\n'+ green('Tex/Latex with anyone, anywhere!\n') +
+        green('Author: Sushovan Majhi <sush@smajhi.com>\n'),
   );
 
   if(isProject(currentPath) && findRoot(currentPath) !== currentPath) {
@@ -57,18 +60,11 @@ async function init(args?: any) {
     {
       name: 'isRoot',
       type: 'confirm',
-      message: "Is '" + green(currentPath) + "' your project root?",
-      validate: function(input: string) {
-        if(input.length) {
-          return true;
-        } else {
-          return 'Please enter Y or n';
-        }
-      },
+      message: "Is (" + gray(currentPath) + ") your project root?",
     },    
   ]);
   if(!answers.isRoot) {
-    console.log(`${yellow('usage:')} Please go to the root of your project and use: ${grey('cotex login')}\n`);
+    console.log(`${red('Usage')}: Please go to the root of your project and use: ${grey('cotex init')}`);
     exit();
   };
 
