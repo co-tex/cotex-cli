@@ -76,7 +76,8 @@ async function init(args?: any) {
     if(!fs.existsSync(currentPath + '/.cotex'))
       fs.mkdirSync(currentPath + '/.cotex');
 
-    const cs = new ConfigStore('cotex-cli',answers,{ configPath: currentPath + '/.cotex/config.json' });
+    const cs = new ConfigStore('cotex-cli', null,{ configPath: currentPath + '/.cotex/config.json' });
+    cs.set(answers);
   }).finally(() => {
     console.log(`\nYou are all set!\nPlease login: ${grey('cotex login')}`);
   });
