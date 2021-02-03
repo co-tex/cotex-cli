@@ -69,6 +69,7 @@ async function login(): Promise<void> {
     }) 
     .then((response) => {
         cs.set('access_token', response.data.access_token);
+        cs.set('userId', response.data.userId);
         console.log(green('You are now logged in!'));
         console.log('Run: ' + grey('cotex start'));   
     })
