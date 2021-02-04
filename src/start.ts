@@ -15,7 +15,7 @@ async function start() {
   await cotex.commands.compile();
   
   return chokidar
-  .watch('/home/sushovan/shape-reconstruction', {
+  .watch(config.get('root'), {
     ignored: new RegExp("(^|[\\/\\\\])\\..|node_modules|" + output),
     persistent: true,
     ignoreInitial: true,
