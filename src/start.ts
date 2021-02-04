@@ -2,13 +2,14 @@ import { cotex }  from './cotex';
 import fs = require('fs');
 import chokidar = require('chokidar');
 import { getConfig } from './util';
+import { green } from 'chalk';
 
 async function start() {
   const config = getConfig();
   const output = config.get('main').replace('.tex','.pdf');
 
   console.log('Starting CoTex remote compilation...');
-  console.log('Live preview: http://localhost:5000/projects/' + 
+  console.log(green('Live preview: ') + config.get('url') + '/projects/' + 
     config.get('projectId') + '/preview?file=' + output);
   
   await cotex.commands.compile();
