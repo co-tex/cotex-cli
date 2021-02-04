@@ -2,27 +2,27 @@ import axios from 'axios';
 import * as fs from 'fs';
 import * as diff from 'json-diff';
 import * as FormData from 'form-data';
-import { findRoot, isProject, index, changeSet } from './util';
-import { exit } from 'process';
+import { index, changeSet, getConfig, authHeader } from './util';
 import { grey, red } from 'chalk';
-import Configstore = require('configstore');
 
 async function sync() {
-  const currentPath = process.cwd();
-  if(!isProject(currentPath)) {
-    console.log(red('Not a CoTex project.'))
-    console.log('Run: ' + grey('cotex init'));
-    exit();
-  }
+  const config = getConfig();
+  const root = config.get('root');
+  const url = config.get('url');
+  const projectId = config.get('projectId');
 
-  const rootPath = findRoot(currentPath);
-  const cs = new Configstore('cotex-cli',{}, { configPath: rootPath + '/.cotex/config.json'});
+  if(!projectId) {
+    console.log(red('Remote project is not set up!'));
+    console.log('Run: ' + grey('cotex remote'));
+  }
   let localIdx: any;
   let remoteIdx: any;
 
-  return index(rootPath).then((index) => {
+  return index(root).then((index) => {
     localIdx = index;
-    return axios.get(cs.get('url') + '/projects/1/index');
+    return axios.get(url + '/projects/' + projectId + '/index', {
+      headers: authHeader()
+    });
   }).then((response)=> {
     remoteIdx = response.data;
     const df =  diff.diff(remoteIdx,localIdx);
@@ -30,26 +30,28 @@ async function sync() {
     
     changes.added.forEach(async (element: any) => {
       const form = new FormData();
-      const fileStream = fs.createReadStream(rootPath + '/' + element.path);
+      const fileStream = fs.createReadStream(root + '/' + element.path);
       form.append('dir', element.dir);
       form.append('file', fileStream);
-      await axios.post(cs.get('url') + '/projects/1/upload', form, {
-        headers: form.getHeaders()
+      await axios.post(url + '/projects/'+ projectId + '/upload', form, {
+        headers: {...form.getHeaders(), ...authHeader()}
       });
     });
     
     changes.modified.forEach(async (element: any) => {
       const form = new FormData();
-      const fileStream = fs.createReadStream(rootPath + '/' + element.path);
+      const fileStream = fs.createReadStream(root + '/' + element.path);
       form.append('dir', element.dir);
       form.append('file', fileStream);
-      await axios.post(cs.get('url') + '/projects/1/upload', form, {
-        headers: form.getHeaders()
+      await axios.post(url + '/projects/' + projectId + '/upload', form, {
+        headers: {...form.getHeaders(),...authHeader()}
       });
     });
 
     changes.deleted.forEach(async (element: any) => {
-      axios.post(cs.get('url') + '/projects/1/delete', changes.deleted);
+      axios.post(url + '/projects/' + projectId + '/delete', changes.deleted, {
+        headers: authHeader()
+      });
     });
   });
 }

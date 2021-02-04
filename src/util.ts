@@ -1,5 +1,8 @@
 import * as fs from 'fs';
 import * as fg from 'fast-glob';
+import { grey, red } from 'chalk';
+import { exit } from 'process';
+import * as Configstore from 'configstore';
 
 function findRoot(path: string): string {
 
@@ -73,4 +76,27 @@ function changeSet(df: any) {
     }
     return set;
 }
-export { isProject, findRoot, index, changeSet };
+function getConfig() {
+    const currentPath = process.cwd();
+    
+    if(!isProject(currentPath)) {
+        console.log(red('Not a CoTex project!'));
+        console.log(`To initialize run: ${grey('cotex init')}`);
+        exit();
+    }
+    
+    const rootPath = findRoot(currentPath);
+    return new Configstore('cotex-cli',{},{ configPath: rootPath + '/.cotex/config.json' } );
+}
+function authHeader() {
+    const config = getConfig();
+    if(!config.get('access_token')) {
+        console.log(red('You are not logged in!'));
+        console.log('To log in run: ' + grey('cotex login'));
+        exit()
+    }
+    return {
+        Authorization: "Bearer " + config.get('access_token')
+    }
+}
+export { isProject, findRoot, index, changeSet, getConfig, authHeader };

@@ -1,16 +1,21 @@
 import { cotex }  from './cotex';
 import fs = require('fs');
 import chokidar = require('chokidar');
+import { getConfig } from './util';
 
 async function start() {
+  const config = getConfig();
+  const output = config.get('main').replace('.tex','.pdf');
+
   console.log('Starting CoTex remote compilation...');
-  console.log('Live preview: http://localhost:5000/projects/1/preview');
+  console.log('Live preview: http://localhost:5000/projects/' + 
+    config.get('projectId') + '/preview?file=' + output);
   
   await cotex.commands.compile();
   
-  chokidar
+  return chokidar
   .watch('/home/sushovan/shape-reconstruction', {
-    ignored: /(^|[\/\\])\..|node_modules|reconstruction.pdf/,
+    ignored: new RegExp("(^|[\\/\\\\])\\..|node_modules|" + output),
     persistent: true,
     ignoreInitial: true,
   })

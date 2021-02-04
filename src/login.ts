@@ -1,33 +1,15 @@
-import * as ConfigStore from 'configstore';
 import * as CLI from 'clui';
-import jwtDecode, { JwtPayload } from "jwt-decode";
 import * as inquirer from 'inquirer';
 import axios from 'axios';
-import { findRoot, isProject } from './util';
 import { exit } from 'process';
 import { red, grey, green } from 'chalk';
+import { getConfig } from './util';
 
 async function login(): Promise<void> {
-    
-    const currentPath = process.cwd();
-    
-    if(!isProject(currentPath)) {
-        console.log(red('Not a CoTex project!'));
-        console.log(`To initialize run: ${grey('cotex init')}`);
-        exit();
-    }
-    
-    const rootPath = findRoot(currentPath);
-    const cs = new ConfigStore('cotex-cli',{},{ configPath: rootPath + '/.cotex/config.json' } );
-    
-    const token = cs.get('access_token');
-    /* if(token) {
-        const decoded = jwtDecode<JwtPayload>(token);
-        console.log('Already logged in!');
-        exit();
-    } */
-    
-    const url = cs.get('url');
+    const config = getConfig();    
+      
+    const token = config.get('access_token');
+    const url = config.get('url');
     const status = new CLI.Spinner('Authenticating you. Please wait...');
     
     if(!url) {
@@ -68,8 +50,8 @@ async function login(): Promise<void> {
         return axios.post(url + '/auth/login', answers);
     }) 
     .then((response) => {
-        cs.set('access_token', response.data.access_token);
-        cs.set('userId', response.data.userId);
+        config.set('access_token', response.data.access_token);
+        config.set('userId', response.data.userId);
         console.log(green('You are now logged in!'));
         console.log('Run: ' + grey('cotex start'));   
     })

@@ -74,6 +74,8 @@ async function init(args?: any) {
 
     const cs = new ConfigStore('cotex-cli', null,{ configPath: currentPath + '/.cotex/config.json' });
     cs.set(answers);
+    cs.set('root', currentPath);
+
   }).finally(() => {
     console.log(`\nYou are all set!\nPlease login: ${grey('cotex login')}`);
   });
